@@ -7,7 +7,7 @@ logger = logging.getLogger(_name_)
 load_dotenv()
 
 class DatabaseConfig:
-    def _init_(self):
+    def __init__(self):
         self.server = os.getenv('DB_HOST')
         self.database = os.getenv('BD_NAME')
         self.username = os.getenv('BD_USER')
