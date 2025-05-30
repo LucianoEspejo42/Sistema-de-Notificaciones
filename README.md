@@ -9,11 +9,11 @@ Sistema automatizado para el procesamiento y envío de notificaciones por email 
 - **Envío de emails** con configuración SMTP
 - **Dashboard interactivo** con gráficos de tendencias y estados
 - **Auditoría completa** de todas las operaciones
-- **Manejo robusto de errores** y logs detallados
 
 ## Estructura del Proyecto
 
 ```
+├── Documentación              # Guardo la documentación del proyecto   
 ├── main.py                    # Punto de entrada principal
 ├── alertas_service.py         # Lógica de procesamiento de notificaciones
 ├── database_config.py         # Configuración y conexión a base de datos
@@ -87,5 +87,3 @@ El sistema genera logs detallados de todas las operaciones:
 Para Gmail, usar:
 - Habilitar autenticación de 2 factores
 - Generar contraseña de aplicación
-- Usar `smtp.gmail.com:587`
-```
