@@ -3,11 +3,11 @@ import os
 import logging
 from dotenv import load_dotenv
 
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 load_dotenv()
 
 class DatabaseConfig:
-    def __init__(self):
+    def __init__ (self):
         self.server = os.getenv('DB_HOST')
         self.database = os.getenv('BD_NAME')
         self.username = os.getenv('BD_USER')
