@@ -78,15 +78,15 @@ class NotificacionesService:
             n.Cuerpo,
             n.Destinatario,
             n.Estado,
-            n.Fecha_Creacion,
+            n.Fecha_Envio,
             nt.descripcion as tipo_descripcion,
             nt.destinatarios as destinatarios_default,
             nt.asunto as asunto_default,
             nt.cuerpo as cuerpo_default
         FROM Notificaciones n
-        LEFT JOIN Notificaciones_Tipo nt ON n.IdTipoNotificacion = nt.id_tipo_notification
+        LEFT JOIN Notificaciones_Tipo nt ON n.IdTipoNotificacion = nt.IdTipoNotificacion
         WHERE n.Estado = 'pendiente'
-        ORDER BY n.Fecha_Creacion ASC, n.IdNotificacion ASC
+        ORDER BY n.Fecha_Envio ASC, n.IdNotificacion ASC
         """
         
         try:
@@ -104,7 +104,7 @@ class NotificacionesService:
                     'cuerpo': notif['Cuerpo'] or notif['cuerpo_default'] or 'Tienes una nueva notificación del sistema.',
                     'destinatarios': notif['Destinatario'] or notif['destinatarios_default'] or '',
                     'estado': notif['Estado'],
-                    'fecha_creacion': notif['Fecha_Creacion']
+                    'fecha_envio': notif['Fecha_Envio']
                 }
                 
                 # Validar que tenga destinatarios
@@ -147,17 +147,20 @@ class NotificacionesService:
             return False
     
     @staticmethod
-    def registrar_auditoria(id_notificacion, accion, descripcion):
+    def registrar_auditoria(id_notificacion, accion, descripcion, usuario='sistema'):
         """
         Se debe registrar una entrada en la tabla de auditoría.
         """
         query = """
-        INSERT INTO Auditoria (IdNotificacion, Accion, Descripcion, Fecha)
-        VALUES (?, ?, ?, GETDATE())
+        INSERT INTO Auditoria (accion, detalle, fecha_aud, [user])
+        VALUES (?, ?, GETDATE(), ?)
         """
         
         try:
-            db_config.execute_non_query(query, [id_notificacion, accion, descripcion])
+            # Incluir el ID de notificación en el detalle para referencia
+            detalle_completo = f"ID_Notificacion: {id_notificacion} - {descripcion}"
+            
+            db_config.execute_non_query(query, [accion, detalle_completo, usuario])
             logger.info(f"Auditoría registrada para notificación {id_notificacion}: {accion}")
             return True
         except Exception as e:
